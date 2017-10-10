@@ -1,45 +1,19 @@
-package org.mushare.tsukuba.domain;
+package org.mushare.tsukuba.bean;
 
-import org.hibernate.annotations.GenericGenerator;
+import org.mushare.tsukuba.domain.User;
 
-import javax.persistence.*;
-import java.io.Serializable;
+public class UserBean {
 
-@Entity
-@Table(name = "tsukuba_user")
-public class User implements Serializable {
-
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid")
     private String uid;
-
-    @Column(nullable = false)
-    private Long createAt;
-
-    @Column(nullable = false)
+    private long createAt;
     private String name;
-
-    @Column
     private String avatar;
-
-    @Column(nullable = false)
     private String type;
-
-    @Column(nullable = false, unique = true)
     private String identifier;
-
-    @Column(nullable = false)
     private String credential;
-
-    @Column
     private String contact;
-
-    @Column
     private String address;
-
-    @Column(nullable = false)
-    private Integer level;
+    private int level;
 
     public String getUid() {
         return uid;
@@ -49,11 +23,11 @@ public class User implements Serializable {
         this.uid = uid;
     }
 
-    public Long getCreateAt() {
+    public long getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(Long createAt) {
+    public void setCreateAt(long createAt) {
         this.createAt = createAt;
     }
 
@@ -113,26 +87,31 @@ public class User implements Serializable {
         this.address = address;
     }
 
-    public Integer getLevel() {
+    public int getLevel() {
         return level;
     }
 
-    public void setLevel(Integer level) {
+    public void setLevel(int level) {
         this.level = level;
     }
 
-    public User() {
-        super();
+    public UserBean(User user, boolean safe) {
+        this.uid = user.getUid();
+        this.createAt = user.getCreateAt();
+        this.type = user.getType();
+        this.identifier = user.getIdentifier();
+        this.name = user.getName();
+        this.avatar = user.getAvatar();
+        this.contact = user.getContact();
+        this.address = user.getAddress();
+        this.level = user.getLevel();
+        if (!safe) {
+            this.credential = user.getCredential();
+        }
     }
 
-    public User(Long createAt, String type, String identifier, String credential, String name, Integer level) {
-        this.createAt = createAt;
-        this.type = type;
-        this.identifier = identifier;
-        this.credential = credential;
-        this.name = name;
-        this.level = level;
+    public void safe() {
+        this.credential = null;
     }
+
 }
-
-

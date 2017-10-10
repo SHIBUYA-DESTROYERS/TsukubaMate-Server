@@ -17,13 +17,16 @@ public class Device implements Serializable {
     private Long createAt;
 
     @Column(nullable = false)
+    private Long updateAt;
+
+    @Column(nullable = false, unique = true)
     private String identifier;
 
     @Column(nullable = false)
     private String token;
 
     @Column
-    private String devicetoken;
+    private String deviceToken;
 
     @Column(nullable = false)
     private String ip;
@@ -57,6 +60,14 @@ public class Device implements Serializable {
         this.createAt = createAt;
     }
 
+    public Long getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(Long updateAt) {
+        this.updateAt = updateAt;
+    }
+
     public String getIdentifier() {
         return identifier;
     }
@@ -73,12 +84,12 @@ public class Device implements Serializable {
         this.token = token;
     }
 
-    public String getDevicetoken() {
-        return devicetoken;
+    public String getDeviceToken() {
+        return deviceToken;
     }
 
-    public void setDevicetoken(String devicetoken) {
-        this.devicetoken = devicetoken;
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 
     public String getIp() {

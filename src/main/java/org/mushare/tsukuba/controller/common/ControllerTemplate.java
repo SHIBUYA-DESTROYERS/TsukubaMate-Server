@@ -4,10 +4,9 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.mushare.tsukuba.bean.UserBean;
 import org.mushare.tsukuba.component.ConfigComponent;
-import org.mushare.tsukuba.service.AdminManager;
-import org.mushare.tsukuba.service.CategoryManager;
-import org.mushare.tsukuba.service.UserManager;
+import org.mushare.tsukuba.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +21,6 @@ import java.util.Map;
 
 public class ControllerTemplate {
 
-    // Default file upload folder.
-    public static final String UploadFolder = "/upload";
-
     // Limitation of uploaded file.
     private static final int FileMaxSize = 512 * 1024 * 1024;
 
@@ -32,10 +28,19 @@ public class ControllerTemplate {
     protected ConfigComponent configComponent;
 
     @Autowired
+    protected AdminManager adminManager;
+
+    @Autowired
     protected UserManager userManager;
 
     @Autowired
+    protected DeviceManager deviceManager;
+
+    @Autowired
     protected CategoryManager categoryManager;
+
+    @Autowired
+    protected SelectionManager selectionManager;
 
     protected ResponseEntity generateOK(Map<String, Object> result) {
         return generateResponseEntity(result, HttpStatus.OK, null, null);
@@ -49,6 +54,15 @@ public class ControllerTemplate {
         return generateBadRequest(errorCode.code, errorCode.message);
     }
 
+    /**
+     * Generate response entity.
+     *
+     * @param result
+     * @param status
+     * @param errCode
+     * @param errMsg
+     * @return
+     */
     protected ResponseEntity generateResponseEntity(Map<String, Object> result, HttpStatus status, Integer errCode, String errMsg) {
         Map<String, Object> data = new HashMap<String, Object>();
         if (result != null) {
@@ -64,11 +78,36 @@ public class ControllerTemplate {
         return new ResponseEntity(data, status);
     }
 
-    public boolean checkAdminSession(HttpSession session) {
-        return session.getAttribute(AdminManager.ADMIN_FLAG) != null;
+    /**
+     * Check admin session.
+     *
+     * @param session
+     * @return
+     */
+    protected boolean checkAdminSession(HttpSession session) {
+        return session.getAttribute(AdminManager.AdminFlag) != null;
     }
 
-    public String upload(HttpServletRequest request, String filepath) {
+    /**
+     * User auth by token in request header.
+     *
+     * @param request
+     * @return
+     */
+    protected UserBean auth(HttpServletRequest request) {
+        String token = request.getHeader("token");
+        UserBean user = userManager.authByToken(token);
+        return user;
+    }
+
+    /**
+     * Upload file to a file path.
+     *
+     * @param request
+     * @param filepath
+     * @return
+     */
+    protected String upload(HttpServletRequest request, String filepath) {
         String fileName = null;
         // Create factory object.
         DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -105,4 +144,25 @@ public class ControllerTemplate {
         }
         return fileName;
     }
+
+    /**
+     * Get device remote IP by HttpServletRequest.
+     *
+     * @param request
+     * @return
+     */
+    protected static String getRemoteIP(HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
+    }
+
 }

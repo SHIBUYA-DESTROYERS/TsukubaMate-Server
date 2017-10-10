@@ -8,14 +8,20 @@ import java.util.List;
 
 public interface CategoryManager {
 
-    public static final String CategoryIconPath = "/files/category";
-
     /**
      * Get all categories order by create date.
      *
      * @return
      */
     List<CategoryBean> getAll();
+
+    /**
+     * Get  activied category by revision.
+     *
+     * @param rev
+     * @return
+     */
+    List<CategoryBean> getActivedByRev(int rev);
 
     /**
      * Get a category by cid.

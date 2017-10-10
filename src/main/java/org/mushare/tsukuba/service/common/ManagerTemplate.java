@@ -3,6 +3,8 @@ package org.mushare.tsukuba.service.common;
 import org.mushare.tsukuba.component.ConfigComponent;
 import org.mushare.tsukuba.component.MailComponent;
 import org.mushare.tsukuba.dao.CategoryDao;
+import org.mushare.tsukuba.dao.DeviceDao;
+import org.mushare.tsukuba.dao.SelectionDao;
 import org.mushare.tsukuba.dao.UserDao;
 import org.mushare.tsukuba.service.AdminManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,43 +14,26 @@ import javax.servlet.http.HttpSession;
 public class ManagerTemplate {
 
     @Autowired
-    protected UserDao userDao;
-
-    @Autowired
-    protected CategoryDao categoryDao;
-
-    @Autowired
     protected ConfigComponent configComponent;
 
     @Autowired
     protected MailComponent mailComponent;
 
-    public UserDao getUserDao() {
-        return userDao;
-    }
+    @Autowired
+    protected UserDao userDao;
 
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
+    @Autowired
+    protected DeviceDao deviceDao;
 
-    public CategoryDao getCategoryDao() {
-        return categoryDao;
-    }
+    @Autowired
+    protected CategoryDao categoryDao;
 
-    public void setCategoryDao(CategoryDao categoryDao) {
-        this.categoryDao = categoryDao;
-    }
+    @Autowired
+    protected SelectionDao selectionDao;
 
-    public ConfigComponent getConfigComponent() {
-        return configComponent;
-    }
-
-    public void setConfigComponent(ConfigComponent configComponent) {
-        this.configComponent = configComponent;
-    }
 
     public boolean checkAdminSession(HttpSession session) {
-        return session.getAttribute(AdminManager.ADMIN_FLAG) != null;
+        return session.getAttribute(AdminManager.AdminFlag) != null;
     }
 
 }
