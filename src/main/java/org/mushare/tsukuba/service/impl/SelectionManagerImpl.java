@@ -51,6 +51,10 @@ public class SelectionManagerImpl extends ManagerTemplate implements SelectionMa
         return new SelectionBean(selection);
     }
 
+    public int getGlobalRev() {
+        return selectionDao.getMaxRev();
+    }
+
     @RemoteMethod
     @Transactional
     public Result create(String identifier, String cid, HttpSession session) {
@@ -67,6 +71,7 @@ public class SelectionManagerImpl extends ManagerTemplate implements SelectionMa
         selection.setIdentifier(identifier);
         selection.setActive(false);
         selection.setEnable(false);
+        selection.setPriority(0);
         selection.setCategory(category);
         if (selectionDao.save(selection) == null) {
             Debug.error("Selection save failed");

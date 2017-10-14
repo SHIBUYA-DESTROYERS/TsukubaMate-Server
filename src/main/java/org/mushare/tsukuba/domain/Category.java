@@ -32,8 +32,11 @@ public class Category implements Serializable {
     @Column(nullable = false)
     private String icon;
 
-    @Column
+    @Column(unique = true)
     private Integer rev;
+
+    @Column(nullable = false)
+    private Integer priority;
 
     public String getCid() {
         return cid;
@@ -99,4 +102,11 @@ public class Category implements Serializable {
         this.rev = rev;
     }
 
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
 }

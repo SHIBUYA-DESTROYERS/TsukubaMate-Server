@@ -25,8 +25,8 @@ public class OptionManagerImpl extends ManagerTemplate implements OptionManager 
 
     @RemoteMethod
     public List<OptionBean> getBySid(String sid) {
-        Selection selection=selectionDao.get(sid);
-        if(selection==null){
+        Selection selection = selectionDao.get(sid);
+        if (selection == null) {
             Debug.error("Can not find a selection by the sid.");
             return null;
         }
@@ -54,6 +54,10 @@ public class OptionManagerImpl extends ManagerTemplate implements OptionManager 
         return new OptionBean(option);
     }
 
+    public int getGlobalRev() {
+        return optionDao.getMaxRev();
+    }
+
     @RemoteMethod
     @Transactional
     public Result create(String identifier, String sid, HttpSession session) {
@@ -70,6 +74,7 @@ public class OptionManagerImpl extends ManagerTemplate implements OptionManager 
         option.setIdentifier(identifier);
         option.setActive(false);
         option.setEnable(false);
+        option.setPriority(0);
         option.setSelection(selection);
         if (optionDao.save(option) == null) {
             Debug.error("Option save failed");

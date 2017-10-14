@@ -29,8 +29,11 @@ public class Selection implements Serializable {
     @Column
     private String name;
 
-    @Column
+    @Column(unique = true)
     private Integer rev;
+
+    @Column(nullable = false)
+    private Integer priority;
 
     @ManyToOne
     @JoinColumn(name = "cid", nullable = false)
@@ -90,6 +93,14 @@ public class Selection implements Serializable {
 
     public void setRev(Integer rev) {
         this.rev = rev;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
     public Category getCategory() {
