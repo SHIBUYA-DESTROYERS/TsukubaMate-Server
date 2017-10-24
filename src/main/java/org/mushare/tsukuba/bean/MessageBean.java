@@ -11,13 +11,10 @@ public class MessageBean {
     private Date updateAt;
     private long seq;
     private String title;
-    private String introduction;
     private int price;
     private String cover;
-    private boolean sell;
     private boolean enable;
     private String cid;
-    private String uid;
 
     public String getMid() {
         return mid;
@@ -63,28 +60,12 @@ public class MessageBean {
         this.title = title;
     }
 
-    public String getIntroduction() {
-        return introduction;
-    }
-
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction;
-    }
-
     public Integer getPrice() {
         return price;
     }
 
     public void setPrice(Integer price) {
         this.price = price;
-    }
-
-    public boolean isSell() {
-        return sell;
-    }
-
-    public void setSell(boolean sell) {
-        this.sell = sell;
     }
 
     public boolean isEnable() {
@@ -111,27 +92,16 @@ public class MessageBean {
         this.cid = cid;
     }
 
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
     public MessageBean(Message message) {
         this.mid = message.getMid();
         this.createAt = new Date(message.getCreateAt());
         this.updateAt = new Date(message.getUpdateAt());
         this.seq = message.getSeq();
         this.title = message.getTitle();
-        this.introduction = message.getIntroduction();
         this.price = message.getPrice();
-        this.sell = message.getSell();
         this.cover = message.getCover() == null ? "/static/images/picture.png" : message.getCover().getPath();
         this.enable = message.getEnable();
         this.cid = message.getCategory().getCid();
-        this.uid = message.getUser().getUid();
     }
 
 }
