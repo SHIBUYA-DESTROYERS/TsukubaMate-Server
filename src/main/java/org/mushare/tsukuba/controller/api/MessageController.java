@@ -72,13 +72,13 @@ public class MessageController extends ControllerTemplate {
         }});
     }
 
-    @RequestMapping(value = "/enable", method = RequestMethod.POST)
-    public ResponseEntity enableMessage(@RequestParam String mid, @RequestParam boolean enable, HttpServletRequest request) {
+    @RequestMapping(value = "/close", method = RequestMethod.POST)
+    public ResponseEntity enableMessage(@RequestParam String mid, HttpServletRequest request) {
         UserBean userBean = auth(request);
         if (userBean == null) {
             return generateBadRequest(ErrorCode.ErrorToken);
         }
-        Result result = messageManager.enable(mid, enable, userBean.getUid());
+        Result result = messageManager.enable(mid, false, userBean.getUid());
         if (result == Result.ObjectIdError) {
             return generateBadRequest(ErrorCode.ErrorObjecId);
         }
@@ -131,7 +131,7 @@ public class MessageController extends ControllerTemplate {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseEntity getMessages(@RequestParam(defaultValue = "-1") long seq,
                                       @RequestParam(defaultValue = "true") boolean sell,
-                                      String cid, @RequestParam(defaultValue = "20") int size) {
+                                      String cid, @RequestParam(defaultValue = "24") int size) {
         if (seq < 0) {
             seq = Long.MAX_VALUE;
         }
@@ -154,13 +154,21 @@ public class MessageController extends ControllerTemplate {
     }
 
     @RequestMapping(value = "/detail/{mid}", method = RequestMethod.GET)
-    public ResponseEntity getPicturesOfMessage(@PathVariable String mid) {
+    public ResponseEntity getDetailMessage(@PathVariable String mid) {
         final DetailMessageBean messageBean = messageManager.getDetail(mid);
         if (messageBean == null) {
             return generateBadRequest(ErrorCode.ErrorObjecId);
         }
         return generateOK(new HashMap<String, Object>() {{
             put("message", messageBean);
+        }});
+    }
+
+    @RequestMapping(value = "/pictures/{mid}", method = RequestMethod.GET)
+    public ResponseEntity getPicturesOfMessage(@PathVariable String mid) {
+        final List<PictureBean> pictureBeans = pictureManager.getPicturesByMid(mid);
+        return generateOK(new HashMap<String, Object>() {{
+            put("pictures", pictureBeans);
         }});
     }
 
